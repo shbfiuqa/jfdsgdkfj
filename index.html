@@ -91,8 +91,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             for (const [key, value] of urlParams.entries()) {
                 console.log(`Key: ${key}, Value: ${value}`);
-                // Check if the key is 55 characters long and value is a valid base64
-                if (/^[A-Za-z0-9+\/]{55}$/.test(key) && /^[A-Za-z0-9+\/=]*$/.test(value)) {
+                // Check if the key is exactly 55 characters long and value is a valid base64
+                if (key.length === 55 && /^[A-Za-z0-9+\/=]*$/.test(value)) {
                     const decodedValue = decodeBase64(value);
                     console.log(`Decoded Value: ${decodedValue}`);
                     if (decodedValue && decodedValue.includes('@')) {
