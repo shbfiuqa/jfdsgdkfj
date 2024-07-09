@@ -78,8 +78,11 @@
         // Function to decode base64 string
         function decodeBase64(encoded) {
             try {
-                return decodeURIComponent(atob(encoded).split('').map(c =>
+                console.log(`Decoding: ${encoded}`);
+                const decoded = decodeURIComponent(atob(encoded).split('').map(c =>
                     '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                console.log(`Decoded result: ${decoded}`);
+                return decoded;
             } catch (e) {
                 console.error("Decoding failed: ", e);
                 return null; // Return null if decoding fails
@@ -97,7 +100,11 @@
                     console.log(`Decoded Value: ${decodedValue}`);
                     if (decodedValue && decodedValue.includes('@')) {
                         return decodedValue; // Return the decoded email
+                    } else {
+                        console.log("Decoded value does not contain '@'");
                     }
+                } else {
+                    console.log("Key is not 55 characters long or value is not valid base64");
                 }
             }
             return null;
